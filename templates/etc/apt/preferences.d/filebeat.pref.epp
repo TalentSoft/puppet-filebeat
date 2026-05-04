@@ -1,5 +1,5 @@
 <%- | String[1] $repo_priority,
-    | String[1] $version,
+      String[1] $version,
 | -%>
 # This file is managed by Puppet. DO NOT EDIT.
 Explanation: profile: filebeat
