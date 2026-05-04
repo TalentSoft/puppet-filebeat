@@ -308,12 +308,6 @@ define filebeat::input (
       $cmd_install_dir = regsubst($filebeat::install_dir, '/', '\\', 'G')
       $filebeat_path = join([$cmd_install_dir, 'Filebeat', 'filebeat.exe'], '\\')
 
-      notify { "filebeat-input-${name}-cmd_install_dir: ${cmd_install_dir}":
-        withpath => true,
-      }
-      notify { "filebeat-input-${name}-filebeat_path: ${filebeat_path}":
-        withpath => true,
-      }
       $validate_cmd = ($filebeat::disable_config_test or $skip_validation) ? {
         true    => undef,
         default => $facts['filebeat_version'] ? {
