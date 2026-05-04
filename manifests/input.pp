@@ -317,8 +317,8 @@ define filebeat::input (
       $validate_cmd = ($filebeat::disable_config_test or $skip_validation) ? {
         true    => undef,
         default => $facts['filebeat_version'] ? {
-          '5'     => "${filebeat_path} -N -configtest -c %",
-          default => "${filebeat_path} -c ${filebeat::config_file} test config",
+          '5'     => "\"${filebeat_path}\" -N -configtest -c \"%\"",
+          default => "\"${filebeat_path}\" -c \"${filebeat::config_file}\" test config",
         },
       }
 
