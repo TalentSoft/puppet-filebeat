@@ -1,0 +1,5 @@
+<%- | String[1] $debian_repo_url,
+| -%>
+# This file is managed by Puppet. DO NOT EDIT.
+# beats
+deb <%= $debian_repo_url %> stable main

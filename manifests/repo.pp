@@ -4,30 +4,54 @@
 #
 # @summary Manages the yum, apt, and zypp repositories for Filebeat
 class filebeat::repo {
+  $elastic_gpg_key = "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
   $debian_repo_url = "https://artifacts.elastic.co/packages/${filebeat::major_version}.x/apt"
-  $yum_repo_url = "https://artifacts.elastic.co/packages/${filebeat::major_version}.x/yum"
+  $yum_repo_url    = "https://artifacts.elastic.co/packages/${filebeat::major_version}.x/yum"
 
   case $facts['os']['family'] {
     'Debian': {
-      if $filebeat::manage_apt == true {
-        include apt
+      exec { 'add_elasticsearch_gpg_key':
+        path    => ['/bin','/usr/bin'],
+        creates => '/etc/apt/keyrings/elasticsearch.gpg',
+        # lint:ignore:strict_indent
+        command => @("COMMAND"/L),
+          mkdir -p /etc/apt/keyrings \
+          && curl -sLS ${elastic_gpg_key} | gpg --dearmor -o /etc/apt/keyrings/elasticsearch.gpg \
+          && chmod go+r /etc/apt/keyrings/elasticsearch.gpg
+          | - COMMAND
+        # lint:endignore
       }
 
-      Class['apt::update'] -> Package['filebeat']
-
-      if !defined(Apt::Source['beats']) {
-        apt::source { 'beats':
-          ensure   => $filebeat::alternate_ensure,
-          location => $debian_repo_url,
-          release  => 'stable',
-          repos    => 'main',
-          pin      => $filebeat::repo_priority,
-          key      => {
-            id     => '46095ACC8548582C1A2699A9D27D666CD88E42B4',
-            source => 'https://artifacts.elastic.co/GPG-KEY-elasticsearch',
-          },
-        }
+      file { '/etc/apt/sources.list.d/beats.list':
+        ensure            => file,
+        content           => epp('filebeat/etc/apt/sources.list.d/beats.list.epp',
+          debian_repo_url => $debian_repo_url,
+        ),
+        owner             => root,
+        group             => root,
+        mode              => '0644',
+        require           => Exec['add_elasticsearch_gpg_key'],
+        notify            => Exec['refresh_apt_for_filebeat'],
       }
+
+      file { '/etc/apt/preferences.d/filebeat.pref':
+        ensure            => file,
+        content           => epp('filebeat/etc/apt/preferences.d/filebeat.pref.epp',
+          repo_priority => $filebeat::repo_priority,
+          version       => $filebeat::package_ensure,
+        ),
+        owner             => root,
+        group             => root,
+        mode              => '0644',
+        require           => Exec['add_elasticsearch_gpg_key'],
+        notify            => Exec['refresh_apt_for_filebeat'],
+      }
+
+      exec { 'refresh_apt_for_filebeat':
+        command     => '/usr/bin/apt update',
+        refreshonly => true,
+      }
+
     }
     'RedHat', 'Linux': {
       if !defined(Yumrepo['beats']) {

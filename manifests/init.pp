@@ -15,7 +15,6 @@
 # @param package_ensure [String] The ensure parameter for the filebeat package (default: present)
 # @param manage_package [Boolean] Whether ot not to manage the installation of the package (default: true)
 # @param manage_repo [Boolean] Whether or not the upstream (elastic) repo should be configured or not (default: true)
-# @param manage_apt [Boolean] Whether or not the apt class should be explicitly called or not (default: true)
 # @param major_version [Enum] The major version of Filebeat to be installed.
 # @param service_ensure [String] The ensure parameter on the filebeat service (default: running)
 # @param service_enable [String] The enable parameter on the filebeat service (default: true)
@@ -70,7 +69,6 @@ class filebeat (
   String  $package_ensure                                             = $filebeat::params::package_ensure,
   Boolean $manage_package                                             = $filebeat::params::manage_package,
   Boolean $manage_repo                                                = $filebeat::params::manage_repo,
-  Boolean $manage_apt                                                 = $filebeat::params::manage_apt,
   Enum['5','6', '7', '8'] $major_version                              = $filebeat::params::major_version,
   Variant[Boolean, Enum['stopped', 'running']] $service_ensure        = $filebeat::params::service_ensure,
   Boolean $service_enable                                             = $filebeat::params::service_enable,

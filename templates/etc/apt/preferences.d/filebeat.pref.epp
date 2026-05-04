@@ -1,0 +1,10 @@
+<%- | String[1] $repo_priority,
+    | String[1] $version,
+| -%>
+# This file is managed by Puppet. DO NOT EDIT.
+Explanation: profile: filebeat
+Package: filebeat
+<% unless $version != 'present' { %>
+Pin: version <%= $version %>
+<% } %>
+Pin-Priority: <%= $repo_priority %>
