@@ -73,7 +73,7 @@ class filebeat (
   Variant[Boolean, Enum['stopped', 'running']] $service_ensure        = $filebeat::params::service_ensure,
   Boolean $service_enable                                             = $filebeat::params::service_enable,
   Optional[String]  $service_provider                                 = $filebeat::params::service_provider,
-  Optional[Integer] $repo_priority                                    = undef,
+  Optional[Integer] $repo_priority                                    = '1001',
   Integer $spool_size                                                 = $filebeat::params::spool_size,
   String  $idle_timeout                                               = $filebeat::params::idle_timeout,
   Boolean $publish_async                                              = $filebeat::params::publish_async,
