@@ -2,4 +2,4 @@
 | -%>
 # This file is managed by Puppet. DO NOT EDIT.
 # beats
-deb <%= $debian_repo_url %> stable main
+deb [signed-by=/etc/apt/keyrings/elasticsearch.gpg] <%= $debian_repo_url %>  stable main
