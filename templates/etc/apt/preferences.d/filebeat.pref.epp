@@ -1,4 +1,4 @@
-<%- | String[1] $repo_priority,
+<%- | Integer   $repo_priority,
       String[1] $version,
 | -%>
 # This file is managed by Puppet. DO NOT EDIT.
