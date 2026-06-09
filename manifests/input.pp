@@ -173,6 +173,9 @@
 # @param publisher_pipeline_disable_host
 #   Whether to disable the host field in the publisher pipeline (default: false)
 #
+# @param allow_deprecated_use
+#   Whether to enable the usage of inputs.log or inputs.container (default: false)
+#
 define filebeat::input (
   Enum['absent', 'present'] $ensure        = present,
   Array[String] $paths                     = [],
@@ -226,6 +229,7 @@ define filebeat::input (
   Optional[String] $max_message_size       = undef,
   Optional[String] $index                  = undef,
   Boolean $publisher_pipeline_disable_host = false,
+  Boolean $allow_deprecated_use            = false,
 ) {
   if 'filebeat_version' in $facts and $facts['filebeat_version'] != false {
     if versioncmp($facts['filebeat_version'], '6') > 0 {

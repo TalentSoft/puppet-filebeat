@@ -114,6 +114,9 @@
   <%- if @harvester_buffer_size -%>
   harvester_buffer_size: <%= @harvester_buffer_size %>
   <%- end -%>
+  <%- if @allow_deprecated_use -%>
+  allow_deprecated_use: <%= @allow_deprecated_use %>
+  <%- end -%>
   <%- if @max_bytes -%>
     <%- if @input_type == 'filestream' -%>
   message_max_bytes: <%= @max_bytes %>
