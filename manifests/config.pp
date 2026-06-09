@@ -301,7 +301,7 @@ class filebeat::config {
       $validate_cmd = ($filebeat::disable_config_test or $skip_validation) ? {
         true    => undef,
         default => $major_version ? {
-          /(7|8)/  => "\"${filebeat_path}\" ${filebeat::extra_validate_options} test config -c \"%\"",
+          /(7|8|9)/  => "\"${filebeat_path}\" ${filebeat::extra_validate_options} test config -c \"%\"",
           default  => "\"${filebeat_path}\" ${filebeat::extra_validate_options} -N -configtest -c \"%\"",
         }
       }
